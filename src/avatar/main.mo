@@ -39,6 +39,11 @@ actor Avatar {
         // Get caller principal
         let callerId = msg.caller;
 
+        // Reject AnonmousIdentity
+        if (Principal.toText(callerId) == "2vxsx-fae") {
+            return #err(#NotAuthorized);
+        }
+
         // Associate user profile with their principal
         let userProfile: Profile = {
             bio = profile.bio;
@@ -70,6 +75,11 @@ actor Avatar {
     public shared(msg) func read() : async Result.Result<Profile, Error> {
         // Get caller principal
         let callerId = msg.caller;
+
+        // Reject AnonmousIdentity
+        if (Principal.toText(callerId) == "2vxsx-fae") {
+            return #err(#NotAuthorized);
+        }
         
         let result = Trie.find(
             profiles,           // Target Trie
@@ -83,6 +93,11 @@ actor Avatar {
     public shared(msg) func update(profile: Profile) : async Result.Result<(), Error> {
         // Get caller principal
         let callerId = msg.caller;
+
+        // Reject AnonmousIdentity
+        if (Principal.toText(callerId) == "2vxsx-fae") {
+            return #err(#NotAuthorized);
+        }
 
         // Associate user profile with their principal
         let userProfile: Profile = {
@@ -117,6 +132,11 @@ actor Avatar {
     public shared(msg) func delete(profileId: Nat) : async Result.Result<(), Error> {
         // Get caller principal
         let callerId = msg.caller;
+
+        // Reject AnonmousIdentity
+        if (Principal.toText(callerId) == "2vxsx-fae") {
+            return #err(#NotAuthorized);
+        }
 
         let result = Trie.find(
             profiles,           // Target Trie
