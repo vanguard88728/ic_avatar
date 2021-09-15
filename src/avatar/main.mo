@@ -17,17 +17,17 @@ actor Avatar {
     type Profile = {
         bio: Bio;
         id: Principal;
-    }
+    };
 
     type ProfileUpdate = {
         bio: Bio;
-    }
+    };
 
     type Error = {
         #NotFound;
         #AlreadyExists;
         #NotAuthorized;
-    }
+    };
 
     // Application state
     stable var profiles : Trie.Trie<Principal, Profile> = Trie.empty();
@@ -39,10 +39,10 @@ actor Avatar {
         // Get caller principal
         let callerId = msg.caller;
 
-        // Reject AnonmousIdentity
+        // Reject AnonymousIdentity
         if (Principal.toText(callerId) == "2vxsx-fae") {
             return #err(#NotAuthorized);
-        }
+        };
 
         // Associate user profile with their principal
         let userProfile: Profile = {
@@ -67,8 +67,8 @@ actor Avatar {
             // Matches pattern of type - opt Profile
             case (? v) {
                 #err(#AlreadyExists);
-            }
-        }
+            };
+        };
     };
 
     // Read profile 
@@ -79,7 +79,7 @@ actor Avatar {
         // Reject AnonmousIdentity
         if (Principal.toText(callerId) == "2vxsx-fae") {
             return #err(#NotAuthorized);
-        }
+        };
         
         let result = Trie.find(
             profiles,           // Target Trie
@@ -97,7 +97,7 @@ actor Avatar {
         // Reject AnonmousIdentity
         if (Principal.toText(callerId) == "2vxsx-fae") {
             return #err(#NotAuthorized);
-        }
+        };
 
         // Associate user profile with their principal
         let userProfile: Profile = {
@@ -124,9 +124,9 @@ actor Avatar {
                     ?userProfile
                 ).0;
                 #ok(());
-            }
-        }
-    }
+            };
+        };
+    };
 
     // Delete profile
     public shared(msg) func delete(profileId: Nat) : async Result.Result<(), Error> {
@@ -136,7 +136,7 @@ actor Avatar {
         // Reject AnonmousIdentity
         if (Principal.toText(callerId) == "2vxsx-fae") {
             return #err(#NotAuthorized);
-        }
+        };
 
         let result = Trie.find(
             profiles,           // Target Trie
@@ -157,11 +157,11 @@ actor Avatar {
                     null
                 ).0;
                 #ok(());
-            }
-        }
-    }
+            };
+        };
+    };
 
     private func key(x: Principal) : Trie.Key<Principal> {
         return { key = x; hash = Principal.hash(x) }
-    }
+    };
 };
