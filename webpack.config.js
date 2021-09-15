@@ -74,8 +74,10 @@ module.exports = {
   // tutorial, uncomment the following lines:
   module: {
    rules: [
-     { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-     { test: /\.css$/, use: ['style-loader','css-loader'] }
+     { test: /\.(ts|tsx|jsx)$/, loader: 'ts-loader' },
+     { test: /\.css$/, use: ['style-loader','css-loader'] },
+     { test: /\.svg$/, use: ['@svgr/webpack'] },
+     { test: /\.(jpg|png|webp)$/, use: ['url-loader'] }
    ]
   },
   plugins: [
