@@ -2,6 +2,7 @@ import Trie "mo:base/Trie";
 import Hash "mo:base/Hash";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
+import Principal "mo:base/Principal";
 
 actor Avatar {
     type Bio = {
@@ -15,30 +16,40 @@ actor Avatar {
 
     type Profile = {
         bio: Bio;
+        id: Principal;
+    }
+
+    type ProfileUpdate = {
+        bio: Bio;
     }
 
     type Error = {
         #NotFound;
         #AlreadyExists;
+        #NotAuthorized;
     }
 
     // Application state
-    stable var profiles : Trie.Trie<Nat, Profile> = Trie.empty();
-
-    stable var next : Nat = 1;
+    stable var profiles : Trie.Trie<Principal, Profile> = Trie.empty();
 
     // Application interface
 
     // Create a profile
-    public func create(profile: Profile) : async Result.Result<(), Error> {
-        let profileId = next;
-        next += 1;
+    public shared(msg) func create(profile: ProfileUpdate) : async Result.Result<(), Error> {
+        // Get caller principal
+        let callerId = msg.caller;
+
+        // Associate user profile with their principal
+        let userProfile: Profile = {
+            bio = profile.bio;
+            id = callerId;
+        };
 
         let (newProfiles, existing) = Trie.put(
             profiles,           // Target trie
-            key(profileId),     // Key
-            Nat.equal,          // Equality checker
-            profile
+            key(callerId),      // Key
+            Principal.equal,    // Equality checker
+            userProfile
         );
 
         // If there is an original value, do not update
@@ -56,21 +67,33 @@ actor Avatar {
     };
 
     // Read profile 
-    public func read(profileId: Nat) : async Result.Result<Profile, Error> {
+    public shared(msg) func read() : async Result.Result<Profile, Error> {
+        // Get caller principal
+        let callerId = msg.caller;
+        
         let result = Trie.find(
             profiles,           // Target Trie
-            key(profileId),     // Key
-            Nat.equal           // Equality checker
+            key(callerId),      // Key
+            Principal.equal     // Equality checker
         );
         return Result.fromOption(result, #NotFound);
     };
 
     // Update profile
-    public func update(profileId: Nat, profile: Profile) : async Result.Result<(), Error> {
+    public shared(msg) func update(profile: Profile) : async Result.Result<(), Error> {
+        // Get caller principal
+        let callerId = msg.caller;
+
+        // Associate user profile with their principal
+        let userProfile: Profile = {
+            bio = profile.bio;
+            id = callerId;
+        };
+
         let result = Trie.find(
             profiles,           // Target Trie
-            key(profileId),     // Key
-            Nat.equal           // Equality checker
+            key(callerId),      // Key
+            Principal.equal     // Equality checker
         );
 
         switch (result) {
@@ -81,9 +104,9 @@ actor Avatar {
             case (? v) {
                 profiles := Trie.replace(
                     profiles,           // Target trie
-                    key(profileId),     // Key
-                    Nat.equal,          // Equality checker
-                    ?profile
+                    key(callerId),      // Key
+                    Principal.equal,    // Equality checker
+                    ?userProfile
                 ).0;
                 #ok(());
             }
@@ -91,11 +114,14 @@ actor Avatar {
     }
 
     // Delete profile
-    public func delete(profileId: Nat) : async Result.Result<(), Error> {
+    public shared(msg) func delete(profileId: Nat) : async Result.Result<(), Error> {
+        // Get caller principal
+        let callerId = msg.caller;
+
         let result = Trie.find(
             profiles,           // Target Trie
-            key(profileId),     // Key
-            Nat.equal           // Equality checker
+            key(callerId),      // Key
+            Principal.equal     // Equality checker
         );
 
         switch (result) {
@@ -106,16 +132,16 @@ actor Avatar {
             case (? v) {
                 profiles := Trie.replace(
                     profiles,           // Target trie
-                    key(profileId),     // Key
-                    Nat.equal,          // Equality checker
-                    ?profile
+                    key(callerId),      // Key
+                    Principal.equal,    // Equality checker
+                    null
                 ).0;
                 #ok(());
             }
         }
     }
 
-    private func key(x: Nat) : Trie.Key<Nat> {
-        return { key = x; hash = Hash.hash(x) }
+    private func key(x: Principal) : Trie.Key<Principal> {
+        return { key = x; hash = Principal.hash(x) }
     }
 };
