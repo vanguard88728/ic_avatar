@@ -1,33 +1,32 @@
 import React from 'react';
-import { avatar } from '../../declarations/avatar';
+import { Provider, defaultTheme } from '@adobe/react-spectrum';
+import styled from "styled-components";
+
+const Header = styled.header`
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  h2 {
+    margin-top: 0;
+  }
+`;
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+`;
 
 const App = () => {
-  const [greeting, setGreeting] = React.useState('');
-  const [pending, setPending] = React.useState(false);
-  const inputRef = React.useRef();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (pending) return;
-    setPending(true);
-    const name = inputRef.current.value.toString();
-
-    const greeting = await avatar.greet(name);
-    setGreeting(greeting);
-    setPending(false);
-    return false;
-  }
 
   return (
-    <main>
-      <img src="logo.png" alt="DFINITY logo"/>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" ref={inputRef}/>
-        <button id="clickMeBtn" type={"submit"} disabled={pending}>Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <Provider theme={defaultTheme}>
+      <Main>
+        <Header>
+          <h2>IC Avatar</h2>
+        </Header>
+      </Main>
+    </Provider>
   )
 }
 
