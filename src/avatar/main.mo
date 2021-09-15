@@ -90,7 +90,7 @@ actor Avatar {
     };
 
     // Update profile
-    public shared(msg) func update(profile: Profile) : async Result.Result<(), Error> {
+    public shared(msg) func update(profile: ProfileUpdate) : async Result.Result<(), Error> {
         // Get caller principal
         let callerId = msg.caller;
 
@@ -129,7 +129,7 @@ actor Avatar {
     };
 
     // Delete profile
-    public shared(msg) func delete(profileId: Nat) : async Result.Result<(), Error> {
+    public shared(msg) func delete() : async Result.Result<(), Error> {
         // Get caller principal
         let callerId = msg.caller;
 
