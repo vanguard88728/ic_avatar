@@ -1,17 +1,12 @@
 import React, {useEffect} from 'react'
 import styled from 'styled-components';
-import { AppContext } from "../App";
-import {Profile} from "../../../declarations/avatar/avatar.did";
-import Loader from "./Loader";
+import { AppContext } from '../App';
+import { Profile } from '../../../declarations/avatar/avatar.did';
+import Loader from './Loader';
+import { Flex } from '@adobe/react-spectrum';
+import CreateProfile from './CreateProfile';
 
 interface Props {}
-
-const Header = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
 
 function Home(props: Props) {
   const {} = props;
@@ -30,16 +25,16 @@ function Home(props: Props) {
 
   if (!isLoaded) {
     return (
-      <section>
+      <Flex>
         <Loader />
-      </section>
+      </Flex>
     )
   }
 
   return (
     <section>
       Home
-      <div>{JSON.stringify(profile)}</div>
+      {profile ? <></> : <CreateProfile setProfile={setProfile} />}
     </section>
   );
 }

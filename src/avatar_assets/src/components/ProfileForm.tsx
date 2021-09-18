@@ -1,6 +1,6 @@
 import React from 'react'
-import { ProfileUpdate } from "../../../declarations/avatar/avatar.did";
-import { Form, TextField } from "@adobe/react-spectrum";
+import { ProfileUpdate } from '../../../declarations/avatar/avatar.did';
+import { Button, Form, TextArea, TextField } from '@adobe/react-spectrum';
 
 interface Props {
   submitCallback: (profile: ProfileUpdate) => void
@@ -71,12 +71,13 @@ class ProfileForm extends React.Component<Props>{
           value={location}
           onChange={(value) => this.handleChange('location', value)}
         />
-        <TextField
+        <TextArea
           label={'About'}
           name={'about'}
           value={about}
           onChange={(value) => this.handleChange('about', value)}
         />
+        <Button variant={'primary'} type={'submit'} onPress={this.handleSubmit}>Submit</Button>
       </Form>
     );
   }
