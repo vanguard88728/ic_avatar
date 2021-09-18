@@ -14,13 +14,16 @@ const Header = styled.section`
 
 function NotAuthenticated(props: Props) {
   const {} = props;
-  const {authClient} = React.useContext(AppContext)
+  const { authClient, setIsAuthenticated } = React.useContext(AppContext)
 
   return (
     <section>
       <h1>You are not authenticated</h1>
       <Button variant='cta' onPress={async () => {
-        await authClient?.login()
+        await authClient?.login({
+          identityProvider: process.env.II_URL
+        });
+        setIsAuthenticated?.(true);
       }}>Login with II</Button>
     </section>
   );

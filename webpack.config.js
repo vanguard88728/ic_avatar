@@ -95,7 +95,10 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
-      AVATAR_CANISTER_ID: canisters["avatar"]
+      AVATAR_CANISTER_ID: canisters["avatar"],
+      II_URL: isDevelopment
+        ? "http://localhost:8000?canisterId=rkp4c-7iaaa-aaaaa-aaaca-cai#authorize"
+        : "https://identitiy.ic0.app/#authroize"
     }),
     new webpack.ProvidePlugin({
       Buffer: [require.resolve("buffer/"), "Buffer"],

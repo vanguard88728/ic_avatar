@@ -3,6 +3,11 @@ import {Provider, defaultTheme, Flex} from '@adobe/react-spectrum';
 import styled from 'styled-components';
 import { AuthClient } from '@dfinity/auth-client';
 import NotAuthenticated from './components/NotAuthenticated';
+import Home from './components/Home';
+import Loader from './components/Loader';
+import {canisterId, createActor} from "../../declarations/avatar";
+import {ActorSubclass} from "@dfinity/agent";
+import {_SERVICE} from "../../declarations/avatar/avatar.did";
 
 const Header = styled.header`
   padding: 1rem;
@@ -20,13 +25,17 @@ const Main = styled.main`
 `;
 
 export const AppContext = React.createContext<{
-  authClient?: AuthClient
+  authClient?: AuthClient;
+  setIsAuthenticated?: React.Dispatch<boolean>;
+  actor?: ActorSubclass<_SERVICE> | undefined
 }>({})
 
 const App = () => {
   const [authClient, setAuthClient] = React.useState<AuthClient | undefined>(undefined);
+  const [actor, setActor] = React.useState<ActorSubclass<_SERVICE> | undefined>(undefined);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [loadingMessage, setLoadingMessage] = React.useState('');
 
   React.useEffect(() => {
     AuthClient.create().then(async (client) => {
@@ -34,24 +43,35 @@ const App = () => {
         setIsAuthenticated(await client.isAuthenticated());
         setIsLoaded(true);
       });
-  }, [])
+  }, []);
+
+  React.useEffect(() => {
+    if (!authClient) return;
+
+    const identity = authClient.getIdentity();
+    const actor = createActor(canisterId as string, {
+      agentOptions: {
+        identity
+      }
+    });
+    setActor(actor);
+  }, [authClient])
 
   return (
     <Provider theme={defaultTheme}>
-      <AppContext.Provider value={{ authClient }}>
+      <AppContext.Provider value={{ authClient, setIsAuthenticated, actor }}>
         <Main>
           <Header>
             <h2>IC Avatar</h2>
           </Header>
           <Flex maxWidth={900} margin={'1rem auto'}>
-            {!isAuthenticated && !isLoaded ? (
-              <></>
-            ) : isLoaded ? (
+            {!isAuthenticated && !loadingMessage ? (
               <NotAuthenticated/>
             ) : (
-              <></>
+              <Home />
             )}
           </Flex>
+          {loadingMessage ? <Loader message={loadingMessage} /> : null}
         </Main>
       </AppContext.Provider>
     </Provider>
