@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import styled from 'styled-components';
 import { AppContext } from '../App';
-import { Profile } from '../../../declarations/avatar/avatar.did';
+import { Profile } from '../../../declarations/avatar_backend/avatar_backend.did';
 import Loader from './Loader';
 import { Flex } from '@adobe/react-spectrum';
 import CreateProfile from './CreateProfile';

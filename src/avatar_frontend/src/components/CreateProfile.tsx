@@ -1,5 +1,5 @@
 import React from 'react'
-import {Profile, ProfileUpdate} from '../../../declarations/avatar/avatar.did';
+import { Profile, ProfileUpdate } from '../../../declarations/avatar_backend/avatar_backend.did';
 import { AppContext } from '../App';
 import ProfileForm from './ProfileForm';
 

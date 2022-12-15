@@ -1,5 +1,5 @@
 import React from 'react'
-import { Profile, ProfileUpdate } from "../../../declarations/avatar/avatar.did";
+import { Profile, ProfileUpdate } from '../../../declarations/avatar_backend/avatar_backend.did';
 import styled from 'styled-components';
 import { ActionButton, ButtonGroup, Grid, Heading, Text } from '@adobe/react-spectrum';
 import ProfileForm from './ProfileForm';

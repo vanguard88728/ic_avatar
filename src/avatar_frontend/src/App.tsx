@@ -2,12 +2,12 @@ import React from 'react';
 import {Provider, defaultTheme, Flex} from '@adobe/react-spectrum';
 import styled from 'styled-components';
 import { AuthClient } from '@dfinity/auth-client';
+import { ActorSubclass } from "@dfinity/agent";
 import NotAuthenticated from './components/NotAuthenticated';
 import Home from './components/Home';
 import Loader from './components/Loader';
-import {canisterId, createActor} from "../../declarations/avatar";
-import {ActorSubclass} from "@dfinity/agent";
-import {_SERVICE} from "../../declarations/avatar/avatar.did";
+import { canisterId, createActor } from '../../declarations/avatar_backend';
+import { _SERVICE } from '../../declarations/avatar_backend/avatar_backend.did';
 
 const Header = styled.header`
   padding: 1rem;

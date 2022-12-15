@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProfileUpdate } from '../../../declarations/avatar/avatar.did';
+import { ProfileUpdate } from '../../../declarations/avatar_backend/avatar_backend.did';
 import { Button, Form, TextArea, TextField } from '@adobe/react-spectrum';
 
 interface Props {
